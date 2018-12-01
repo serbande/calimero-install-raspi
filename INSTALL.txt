@@ -1,0 +1,20 @@
+sudo apt-get install mvn2
+sudo tar -xf apache-maven-3.5.4-bin.tar.gz
+sudo mv apache-maven-3.5.4/ apache-maven/
+ln -sfn /opt/apache-maven-3.6.0/bin/mvn /etc/alternatives/mvn
+ vi ~/calimero-build/calimero-core/src/tuwien/auto/calimero/serial/usb/UsbConnection.java
+   72  mvn install -DskipTests ~/calimero-build/calimero-core/pom.xml
+   73  mvn install -DskipTests -f ~/calimero-build/calimero-core/pom.xml
+   74  mv ~/calimero-build/calimero-core/target/calimero-core-2.4-rc2.jar /opt/calimero-server/
+/usr/bin/java -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n -cp /etc/calimero:/opt/calimero-server/* tuwien.auto.calimero.server.Launcher --no-stdin /etc/calimero/server-config.xml
+knxtools groupmon -m knxip 192.168.1.11
+
+
+java -cp /etc/calimero:/opt/calimero-server/* tuwien.auto.calimero.tools.ProcComm -localhost 192.168.1.11 \ 192.168.1.11 write bool true 1/1/5
+
+java -cp /etc/calimero:/opt/calimero-server/* tuwien.auto.calimero.tools.ProcComm --usb 28c2:002 read  1/1/20
+
+java -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n -cp /etc/calimero:/opt/calimero-server/* tuwien.auto.calimero.tools.ProcComm --usb 28c2:002 write 1 true  1/1/10
+
+
+https://github.com/calimero-project/calimero-core/issues/41
